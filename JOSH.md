@@ -1,0 +1,3 @@
+# JOSH NOTES
+
+- Github Actions would be nice...

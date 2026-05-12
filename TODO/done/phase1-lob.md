@@ -112,19 +112,19 @@ struct LimitOrderBook {
 
 ## Tasks
 
-- [ ] **1.** Create `Cargo.toml` with crate name `simmarket`, edition 2021, deps `ordered-float` and `thiserror`
-- [ ] **2.** Create `src/lib.rs`, `src/shared/mod.rs`, `src/sim/mod.rs` module stubs
-- [ ] **3.** Define all types in `src/shared/types.rs`: `OrderId`, `AgentId`, `SimTime`, `Side`, `OrderType`, `Order`, `Trade`
-- [ ] **4.** Implement `LimitOrderBook` struct with BTreeMap bid/ask sides and stop order buckets
-- [ ] **5.** Implement `insert_limit()` — add a resting limit order to the correct price level FIFO queue
-- [ ] **6.** Implement `cancel()` — remove an order by ID from the book
-- [ ] **7.** Implement `match_order()` — core sweep: walk opposite side, fill, collect trades, return remainder
-- [ ] **8.** Implement stop trigger collection during sweep: gather all stops whose price was crossed
-- [ ] **9.** Implement recursive stop cascade: convert triggered stops and re-enter `match_order()`; cap recursion at depth 64
-- [ ] **10.** Implement IOC semantics: after sweep, cancel any unfilled remainder
-- [ ] **11.** Implement FOK semantics: dry-run check before committing fills
-- [ ] **12.** Implement iceberg display/hidden split and auto-replenishment after each partial fill
-- [ ] **13.** Write unit tests: limit order resting, market order sweep, multi-level sweep, partial fill, IOC cancel, FOK all-or-nothing, stop trigger, stop cascade (chain of stops), iceberg replenishment
+- [x] **1.** Create `Cargo.toml` with crate name `simmarket`, edition 2021, deps `ordered-float` and `thiserror`
+- [x] **2.** Create `src/lib.rs`, `src/shared/mod.rs`, `src/sim/mod.rs` module stubs
+- [x] **3.** Define all types in `src/shared/types.rs`: `OrderId`, `AgentId`, `SimTime`, `Side`, `OrderType`, `Order`, `Trade`
+- [x] **4.** Implement `LimitOrderBook` struct with BTreeMap bid/ask sides and stop order buckets
+- [x] **5.** Implement `insert_limit()` — add a resting limit order to the correct price level FIFO queue
+- [x] **6.** Implement `cancel()` — remove an order by ID from the book
+- [x] **7.** Implement `match_order()` — core sweep: walk opposite side, fill, collect trades, return remainder
+- [x] **8.** Implement stop trigger collection during sweep: gather all stops whose price was crossed
+- [x] **9.** Implement recursive stop cascade: convert triggered stops and re-enter `match_order()`; cap recursion at depth 64
+- [x] **10.** Implement IOC semantics: after sweep, cancel any unfilled remainder
+- [x] **11.** Implement FOK semantics: dry-run check before committing fills
+- [x] **12.** Implement iceberg display/hidden split and auto-replenishment after each partial fill
+- [x] **13.** Write unit tests: limit order resting, market order sweep, multi-level sweep, partial fill, IOC cancel, FOK all-or-nothing, stop trigger, stop cascade (chain of stops), iceberg replenishment
 
 ---
 
@@ -152,4 +152,4 @@ struct LimitOrderBook {
 
 ## Green Light
 
-- [ ] Approved
+- [x] Approved
