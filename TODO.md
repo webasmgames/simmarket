@@ -5,8 +5,9 @@ Each phase is one focused implementation session. Spec lives in `TODO/<phase>.md
 | Status | Phase | File | Description |
 |---|---|---|---|
 | ✅ | 1 | [phase1-lob.md](TODO/done/phase1-lob.md) | Limit Order Book + matching engine (pure Rust, no agents, no WASM) |
-| 🔴 | 2a | [phase2a-tick-engine.md](TODO/phase2a-tick-engine.md) | Tick engine: simulated clock, intra-tick event queue, candle accumulation |
-| 🔴 | 2b | [phase2b-noise-trader.md](TODO/phase2b-noise-trader.md) | Agent trait, noise trader, headless binary, ohlcv.csv output |
+| ✅ | 2a | [phase2a-tick-engine.md](TODO/done/phase2a-tick-engine.md) | Tick engine: simulated clock, intra-tick event queue, candle accumulation |
+| 🔴 | 2b | [phase2c-integer-price.md](TODO/phase2c-integer-price.md) | LOB integer price keys (i64 ticks, $0.0001/tick) |
+| 🔴 | 2c | [phase2b-noise-trader.md](TODO/phase2b-noise-trader.md) | Agent trait, noise trader, headless binary, ohlcv.csv output |
 | 👀 | 3 | [phase3-calibration.md](TODO/phase3-calibration.md) | Calibration harness — validate sim produces realistic microstructure |
 | 👀 | 4 | [phase4-wasm-worker.md](TODO/phase4-wasm-worker.md) | Compile to WASM, run sim in Web Worker, SharedArrayBuffer setup |
 | 👀 | 5 | [phase5-webgpu-canvas.md](TODO/phase5-webgpu-canvas.md) | WebGPU device + candlestick chart rendering |

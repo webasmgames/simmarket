@@ -1,5 +1,5 @@
-use std::collections::{BTreeMap, VecDeque};
 use ordered_float::NotNan;
+use std::collections::{BTreeMap, VecDeque};
 
 use crate::shared::types::{AgentId, Order, OrderId, OrderType, Side, SimTime, Trade};
 
@@ -81,10 +81,18 @@ impl LimitOrderBook {
     }
 
     pub fn cancel(&mut self, id: OrderId) -> bool {
-        if cancel_from_deque(&mut self.bids, id) { return true; }
-        if cancel_from_deque(&mut self.asks, id) { return true; }
-        if cancel_from_vec(&mut self.stop_bids, id) { return true; }
-        if cancel_from_vec(&mut self.stop_asks, id) { return true; }
+        if cancel_from_deque(&mut self.bids, id) {
+            return true;
+        }
+        if cancel_from_deque(&mut self.asks, id) {
+            return true;
+        }
+        if cancel_from_vec(&mut self.stop_bids, id) {
+            return true;
+        }
+        if cancel_from_vec(&mut self.stop_asks, id) {
+            return true;
+        }
         false
     }
 
@@ -119,7 +127,10 @@ impl LimitOrderBook {
 
         let aggressor_side = order.side;
         let is_ioc = matches!(order.order_type, OrderType::Ioc);
-        let is_restable = matches!(order.order_type, OrderType::Limit | OrderType::Iceberg { .. });
+        let is_restable = matches!(
+            order.order_type,
+            OrderType::Limit | OrderType::Iceberg { .. }
+        );
 
         let mut order = order;
         let trades = self.sweep(&mut order, now);
@@ -206,7 +217,7 @@ impl LimitOrderBook {
                     aggressor_order_id: order.id,
                     resting_order_id: resting_id,
                     aggressor_agent: order.agent_id,
-                    resting_agent: resting_agent,
+                    resting_agent,
                     price: *best_key,
                     size: fill_qty,
                     aggressor_side: order.side,
@@ -243,8 +254,8 @@ impl LimitOrderBook {
 
             // Remove empty price level
             let empty = match order.side {
-                Side::Bid => self.asks.get(&best_key).map_or(true, |q| q.is_empty()),
-                Side::Ask => self.bids.get(&best_key).map_or(true, |q| q.is_empty()),
+                Side::Bid => self.asks.get(&best_key).is_none_or(|q| q.is_empty()),
+                Side::Ask => self.bids.get(&best_key).is_none_or(|q| q.is_empty()),
             };
             if empty {
                 match order.side {
@@ -259,7 +270,11 @@ impl LimitOrderBook {
 
     fn can_fill_fully(&self, order: &Order) -> bool {
         let mut needed = order.remaining();
-        let limit_price = if order.price > 0.0 { Some(order.price) } else { None };
+        let limit_price = if order.price > 0.0 {
+            Some(order.price)
+        } else {
+            None
+        };
 
         match order.side {
             Side::Bid => {
@@ -504,7 +519,14 @@ mod tests {
         let mut lob = LimitOrderBook::new();
         lob.submit(limit_ask(1, 10.00, 100), 0);
         lob.submit(limit_ask(3, 10.00, 50), 0);
-        let stop = make_order(2, 2, Side::Bid, OrderType::Stop { stop_price: 10.00 }, 0.0, 50);
+        let stop = make_order(
+            2,
+            2,
+            Side::Bid,
+            OrderType::Stop { stop_price: 10.00 },
+            0.0,
+            50,
+        );
         lob.submit(stop, 0);
 
         // Market bid fills 100 from ask1 → triggers buy stop → fills 50 from ask3
@@ -521,15 +543,32 @@ mod tests {
         lob.submit(limit_ask(2, 10.01, 100), 0);
         lob.submit(limit_ask(3, 10.02, 100), 0);
 
-        let stop1 = make_order(10, 10, Side::Bid, OrderType::Stop { stop_price: 10.00 }, 0.0, 100);
-        let stop2 = make_order(11, 11, Side::Bid, OrderType::Stop { stop_price: 10.01 }, 0.0, 100);
+        let stop1 = make_order(
+            10,
+            10,
+            Side::Bid,
+            OrderType::Stop { stop_price: 10.00 },
+            0.0,
+            100,
+        );
+        let stop2 = make_order(
+            11,
+            11,
+            Side::Bid,
+            OrderType::Stop { stop_price: 10.01 },
+            0.0,
+            100,
+        );
         lob.submit(stop1, 0);
         lob.submit(stop2, 0);
 
         let trades = lob.submit(market_bid(20, 100), 1);
         println!("Stop cascade trades:");
         for t in &trades {
-            println!("  price={} size={} aggressor_id={}", t.price, t.size, t.aggressor_order_id);
+            println!(
+                "  price={} size={} aggressor_id={}",
+                t.price, t.size, t.aggressor_order_id
+            );
         }
         assert_eq!(trades.len(), 3);
         assert_eq!(trades[0].price, 10.00);

@@ -1,6 +1,17 @@
 pub type OrderId = u64;
 pub type AgentId = u32;
 pub type SimTime = u64; // microseconds of simulated time
+pub type StockId = u32;
+
+#[derive(Debug, Clone)]
+pub struct Candle {
+    pub open: f64,
+    pub high: f64,
+    pub low: f64,
+    pub close: f64,
+    pub volume: u64,
+    pub sim_time: SimTime, // start-of-minute timestamp (minute_index * 60_000_000)
+}
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Side {
@@ -25,7 +36,7 @@ pub struct Order {
     pub agent_id: AgentId,
     pub side: Side,
     pub order_type: OrderType,
-    pub price: f64,       // limit price; 0.0 for market
+    pub price: f64, // limit price; 0.0 for market
     pub quantity: u32,
     pub filled: u32,
     pub submitted_at: SimTime,

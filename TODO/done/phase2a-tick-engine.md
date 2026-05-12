@@ -10,12 +10,12 @@ Before this phase: a tested LOB with no runtime. After this phase: a tick loop t
 
 ## Requirements
 
-- [ ] Simulated clock advances by 1ms per tick; configurable tick size
-- [ ] Intra-tick event queue holds `OrderEvent`s tagged with microsecond offsets; drains in ascending offset order
-- [ ] Tick loop: advance clock → drain event queue into LOB → accumulate trades into candles
-- [ ] OHLCV candles accumulate at 1-minute resolution
-- [ ] `SimState` owns the clock, the LOB map (keyed by `StockId`), the event queue, candles, and tape
-- [ ] Unit tests verify: events drain in offset order, partial-tick events don't bleed into next tick, candles accumulate open/high/low/close/volume correctly
+- [x] Simulated clock advances by 1ms per tick; configurable tick size
+- [x] Intra-tick event queue holds `OrderEvent`s tagged with microsecond offsets; drains in ascending offset order
+- [x] Tick loop: advance clock → drain event queue into LOB → accumulate trades into candles
+- [x] OHLCV candles accumulate at 1-minute resolution
+- [x] `SimState` owns the clock, the LOB map (keyed by `StockId`), the event queue, candles, and tape
+- [x] Unit tests verify: events drain in offset order, partial-tick events don't bleed into next tick, candles accumulate open/high/low/close/volume correctly
 
 ---
 
@@ -88,13 +88,13 @@ struct SimState {
 
 ## Tasks
 
-- [ ] **1.** Add `StockId` (type alias `u32`) and `Candle` struct to `src/shared/types.rs`
-- [ ] **2.** Implement `OrderEvent`, `OrderAction`, and `EventQueue` in `src/sim/event_queue.rs`; `EventQueue::push()` and `EventQueue::drain_sorted() -> Vec<(u32, AgentId, OrderAction)>`
-- [ ] **3.** Implement `SimState` in `src/sim/engine.rs` with clock, tick_size_us, books, event_queue, candles, tape
-- [ ] **4.** Implement `SimState::tick()`: drain queue in offset order → submit to LOB → collect trades → update candles → advance clock
-- [ ] **5.** Implement candle accumulation: open/high/low/close/volume per stock per minute
-- [ ] **6.** Update `src/sim/mod.rs` to pub mod the new modules
-- [ ] **7.** Write unit tests: events drain in offset order regardless of insertion order; two events at the same offset drain in insertion order; candle open/high/low/close/volume are correct after a sequence of trades; clock advances by tick_size_us each tick
+- [x] **1.** Add `StockId` (type alias `u32`) and `Candle` struct to `src/shared/types.rs`
+- [x] **2.** Implement `OrderEvent`, `OrderAction`, and `EventQueue` in `src/sim/event_queue.rs`; `EventQueue::push()` and `EventQueue::drain_sorted() -> Vec<(u32, AgentId, OrderAction)>`
+- [x] **3.** Implement `SimState` in `src/sim/engine.rs` with clock, tick_size_us, books, event_queue, candles, tape
+- [x] **4.** Implement `SimState::tick()`: drain queue in offset order → submit to LOB → collect trades → update candles → advance clock
+- [x] **5.** Implement candle accumulation: open/high/low/close/volume per stock per minute
+- [x] **6.** Update `src/sim/mod.rs` to pub mod the new modules
+- [x] **7.** Write unit tests: events drain in offset order regardless of insertion order; two events at the same offset drain in insertion order; candle open/high/low/close/volume are correct after a sequence of trades; clock advances by tick_size_us each tick
 
 ---
 
@@ -110,11 +110,11 @@ struct SimState {
 
 ## Manual Testing
 
-- [ ] In a unit test or scratch binary, push 5 `OrderEvent`s with offsets `[300, 100, 500, 200, 400]` and confirm they drain as `[100, 200, 300, 400, 500]`
-- [ ] Run a tick with two crossing orders and confirm the resulting trade appears in the tape and updates the candle
+- [x] In a unit test or scratch binary, push 5 `OrderEvent`s with offsets `[300, 100, 500, 200, 400]` and confirm they drain as `[100, 200, 300, 400, 500]`
+- [x] Run a tick with two crossing orders and confirm the resulting trade appears in the tape and updates the candle
 
 ---
 
 ## Green Light
 
-- [ ] Approved
+- [x] Approved
